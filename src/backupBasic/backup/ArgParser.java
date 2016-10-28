@@ -38,7 +38,7 @@ public class ArgParser {
 		final boolean CanUseGui = !GraphicsEnvironment.isHeadless();
 		//Standardpfade für Anno
 		String SourceDir = System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\saves\\";
-		String OutDirRaw = System.getProperty("user.home") + "\\Desktop\\AnnoSave\\";
+		String OutDirRaw = System.getProperty("user.home") + "\\Desktop\\BackupMinecraft\\";
 		
 		//Argumente verwalten und Unterfunktionen aufrufen
 		switch(args.length) {		
