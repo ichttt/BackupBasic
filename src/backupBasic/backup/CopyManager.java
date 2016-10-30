@@ -23,13 +23,13 @@ public class CopyManager {
 		logger.setLevel(Level.ALL);
 	}
 	
-	//Parameter für ShutdownHook
+	//Parameter fÃ¼r ShutdownHook
 	public static boolean CopyingFiles;
 	private static boolean StopCopy = false;
 	private static boolean CopyStopped = false;
 	private static short Wait = 0;
 	
-	//Zeit ermittlen, auf Minuten kürzen und : durch Punkt ersetzen, da z.B. NTFS keinen : in Ordnern unterstützt
+	//Zeit ermittlen, auf Minuten kÃ¼rzen und : durch Punkt ersetzen, da z.B. NTFS keinen : in Ordnern unterstÃ¼tzt
 	//Wert wird auch in ThreadedBackup verwendet, deshalb public
 	public static final String time = LocalDateTime.now().toString().substring(0, 16).replaceAll(":", ".");
 
@@ -149,7 +149,7 @@ public class CopyManager {
 	
 	
 	/**
-	 * Prüft, ob die Datein mit einem voherigen Backup übereinstimmen und kopiert ggf. das gesamte Verzeichnis samt Unterverzeichnis
+	 * PrÃ¼ft, ob die Datein mit einem voherigen Backup Ã¼bereinstimmen und kopiert ggf. das gesamte Verzeichnis samt Unterverzeichnis
 	 */
 	public static void copyDir(String OutDirRawString, String SourceDirString) {	
 		
@@ -161,11 +161,11 @@ public class CopyManager {
 		File outDir;
 		File[] savesList;
 		String outDirString;
-		//Init, da sonst Fehler(wird immer noch später gesetzt)
+		//Init, da sonst Fehler(wird immer noch spÃ¤ter gesetzt)
 		String sourceDirMD5 = "";
 		String oldDirMD5;
 		int savesCount;
-		//Init, da sonst Fehler(wird immer noch später gesetzt)
+		//Init, da sonst Fehler(wird immer noch spÃ¤ter gesetzt)
 		int sourceDirFilesCount = -1;
 		int saveDirFilesCount;
 		
@@ -210,7 +210,7 @@ public class CopyManager {
 		if(savesCount>=1 && calcCheckSumOldDir) {
 			assert sourceDirMD5 != "";
 			assert sourceDirFilesCount != -1;
-			//Wir brauchen die Prüfsumme der alten Dateien erst gar nicht zu überprüfen, wenn die Ordner verschieden viele Dateien enthalten
+			//Wir brauchen die PrÃ¼fsumme der alten Dateien erst gar nicht zu Ã¼berprÃ¼fen, wenn die Ordner verschieden viele Dateien enthalten
 			saveDirFilesCount = Calc.collectStreams(savesList[savesCount -1]);
 			logger.finer(saveDirFilesCount + messages.getString("FilesInOutDir"));
 			if(saveDirFilesCount != sourceDirFilesCount) {
@@ -218,11 +218,11 @@ public class CopyManager {
 			}
 			
 			else {
-				//Prüfsummenbrechnung des alten Verzeichnisses
+				//PrÃ¼fsummenbrechnung des alten Verzeichnisses
 				logger.info(messages.getString("CheckSumOldDir"));
 				oldDirMD5 = Calc.calcMD5HashForDir(savesList[savesCount -1]);
 				if(sourceDirMD5.equals(oldDirMD5)) {
-					//Falls das Backup nicht erledigt werden musst, sollte dies erfüllt sein
+					//Falls das Backup nicht erledigt werden musst, sollte dies erfÃ¼llt sein
 					logger.info(messages.getString("SkipCopy"));
 					if(canUseGui) {
 						JOptionPane.showMessageDialog(null, messages.getString("SkipCopy"));

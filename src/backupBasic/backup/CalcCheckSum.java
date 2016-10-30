@@ -1,7 +1,7 @@
 package backupBasic.backup;
 
 /*
- * Grundgerüst von http://stackoverflow.com/questions/3010071/how-to-calculate-md5-checksum-on-directory-with-java-or-groovy
+ * GrundgerÃ¼st von http://stackoverflow.com/questions/3010071/how-to-calculate-md5-checksum-on-directory-with-java-or-groovy
  * viele Modifikationen und Vereinfachungen von mir
  */
 import java.io.File;
@@ -52,10 +52,10 @@ public class CalcCheckSum
 	}
 	
 	/**
-	 * Collect Stream hiervor aufrufen, selben Parameter übergeben
+	 * Collect Stream hiervor aufrufen, selben Parameter Ã¼bergeben
 	 * Diese Methode ist nicht thread-safe
 	 * @param dirToHash
-	 * @return Prüfsumme als String
+	 * @return PrÃ¼fsumme als String
 	 */
 	public String calcMD5HashForDir(File dirToHash) {
 		assert finishedInputStreams !=null;
@@ -104,9 +104,8 @@ public class CalcCheckSum
 
 	}
 }
-/* Mein Alter Versuch, SHA für Dateien zu berechnen , ging nur für Hauptordner
-
- //Wenn wir keinen alten Save haben, müssen wir sowieso ein Backup erstellen.
+/* Mein Alter Versuch, SHA fÃ¼r Dateien zu berechnen , ging nur fÃ¼r Hauptordner
+ //Wenn wir keinen alten Save haben, mÃ¼ssen wir sowieso ein Backup erstellen.
 				if(SavesCount >=1)
 				{
 					//Benutze Sha512, um sicherzustellen, dass es sich um die gleichen Dateien handelt
@@ -115,7 +114,7 @@ public class CalcCheckSum
 					File LastFile = new File(SavesList[SavesCount - 1].toString() + "/" + Save);
 					try
 					{
-						//Hier kann es sein, dass das letzte Backup nicht vollstündig was oder neue Dateien hinzugefügt wurden.
+						//Hier kann es sein, dass das letzte Backup nicht vollstÃ¼ndig was oder neue Dateien hinzugefÃ¼gt wurden.
 						InputStream outStream  = new FileInputStream(LastFile);
 						String Sha512out = DigestUtils.sha512Hex(outStream);
 						if(Sha512in.equals(Sha512out))

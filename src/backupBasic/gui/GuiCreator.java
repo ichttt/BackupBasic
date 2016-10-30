@@ -41,7 +41,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	
 	public static String OutDir;
 	public static String SourceDir;
-	//Für Cancel-Button
+	//FÃ¼r Cancel-Button
 	private static boolean BackupInProgress = false;
 
 	private JPanel MainContent, ProgressContent, ProgressCancel;
@@ -56,7 +56,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
     }
     
     /**
-     * Erstellt die Elemente für die Pannels
+     * Erstellt die Elemente fÃ¼r die Pannels
      */
     private void createPanel() {
 		ActionListenerCheckBox checkBoxListener = new ActionListenerCheckBox();    	
@@ -92,7 +92,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		CheckSumOnFinish.setSelected(true);
 		CheckSumOnFinish.setActionCommand("CheckSumOnFinish");
 		
-		CheckSumOldDir = new JCheckBox("Berechne Prüfsumme über altes Backups");
+		CheckSumOldDir = new JCheckBox(messages.getString("CheckSumOldDir"));
 		CheckSumOldDir.setToolTipText(messages.getString("CheckSumOldDirToolTip"));
 		CheckSumOldDir.setSelected(true);
 		CheckSumOldDir.setActionCommand("CheckSumOldDir");
@@ -113,7 +113,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		CancelP.addActionListener(this);
 		Source.addActionListener(this);
 		Dest.addActionListener(this);
-		//Checkboxen erhalten eigene Klasse zwecks Übersicht
+		//Checkboxen erhalten eigene Klasse zwecks Ãœbersicht
 		CheckSumOnFinish.addActionListener(checkBoxListener);
 		CheckSumOldDir.addActionListener(checkBoxListener);
         }
@@ -142,7 +142,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
     
     
     /**
-     * Erstellet eine GUI zum Auswählen von Quell- und Zielverzeichnis
+     * Erstellet eine GUI zum AuswÃ¤hlen von Quell- und Zielverzeichnis
      * @param OutDir
      * @param SourceDir
      */
@@ -162,7 +162,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	}
 	
 	/**
-	 * Öffnet einen Dialog, um einen Ordner auszuwählen und gibt den neuen Pfad zurück
+	 * Ã–ffnet einen Dialog, um einen Ordner auszuwÃ¤hlen und gibt den neuen Pfad zurÃ¼ck
 	 * @param Title
 	 * @param label
 	 * @param Dir
@@ -181,7 +181,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	}	
 	
 	/**
-	 * Verwaltet die GUI-Events, außer CheckBox
+	 * Verwaltet die GUI-Events, auÃŸer CheckBox
 	 */
 	@Override
 	public void actionPerformed(ActionEvent ActionEvent) {
@@ -236,7 +236,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
 		e.printStackTrace();
-		JOptionPane.showMessageDialog(null, "Unbehandelte Ausnahme beim Verarbeiten des Knopfdruckes. Das Programm funktioniert möglicherweise nicht wie erwartet.\nFehler:"
+		JOptionPane.showMessageDialog(null, "Unbehandelte Ausnahme beim Verarbeiten des Knopfdruckes. Das Programm funktioniert mÃ¶glicherweise nicht wie erwartet.\nFehler:"
 									  + e + "\nWeitere Informationen in der Console", "ERROR" , JOptionPane.ERROR_MESSAGE);
 	}
 

@@ -23,7 +23,7 @@ public class ArgParser {
 	}
 	
 	/**
-	 * Fügt, falls nötig, ein Slash an das Ende eines Strings
+	 * FÃ¼gt, falls nÃ¶tig, ein Slash an das Ende eines Strings
 	 */
 	public static String setLastCharSlash(String check) {
 		if(!check.endsWith("/") && !check.endsWith("\\")) {
@@ -38,7 +38,7 @@ public class ArgParser {
 	 */
 	public static void parseArgs(String[] args) {
 		final boolean CanUseGui = !GraphicsEnvironment.isHeadless();
-		//Standardpfade für Anno
+		//Standardpfade fÃ¼r Anno
 		String SourceDir = System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\saves\\";
 		String OutDirRaw = System.getProperty("user.home") + "\\Desktop\\BackupMinecraft\\";
 		
@@ -51,7 +51,7 @@ public class ArgParser {
 				CopyManager.calcCheckSumOnFinish = false;
 			}
 			else if(args[3].equals("true")) {
-				//Eigentlich nicht nötig
+				//Eigentlich nicht nÃ¶tig
 				CopyManager.calcCheckSumOnFinish = true;
 			}
 			else {
@@ -64,7 +64,7 @@ public class ArgParser {
 				CopyManager.calcCheckSumOldDir = false;
 			}
 			else if(args[2].equals("true")) {
-				//Eigentlich nicht nötig
+				//Eigentlich nicht nÃ¶tig
 				CopyManager.calcCheckSumOnFinish = true;
 			}
 			else {

@@ -12,7 +12,7 @@ import backupBasic.backup.CopyManager;
  */
 public class ActionListenerCheckBox implements ActionListener {
 	
-	//TODO Nötig?
+	//TODO NÃ¶tig?
 	@Override
 	public void actionPerformed(ActionEvent ActionEvent) {
 		Thread.setDefaultUncaughtExceptionHandler(new GuiCreator());
