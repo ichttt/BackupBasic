@@ -11,4 +11,4 @@ Dazu können die Parameter Quelle und Ziel angegeben werden.
 Teile der Klasse ClalcMD5 sind von Stuart Rossiter. Für weitere Informationen bitte den Quelltext anschauem.
 
 Dieses Programm benutzt die Bibliothek "commons-codec-1.10.jar", Lizensiert unter der Apache License(2.0)
-Weitere Informationen finden Sie unter "LICDESE commons-codec.txt"
+Weitere Informationen finden Sie unter "LICESE commons-codec.txt"
