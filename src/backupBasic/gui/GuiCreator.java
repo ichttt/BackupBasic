@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import backupBasic.backup.Main;
 import backupBasic.util.ThreadedBackup;
 
 /**
@@ -28,6 +30,7 @@ import backupBasic.util.ThreadedBackup;
  */
 public class GuiCreator extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
 	private static final Logger logger = Logger.getLogger(GuiCreator.class.getName());
+	private static final ResourceBundle messages = Main.getMessages();
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -63,40 +66,38 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
     	ProgressCancel = new JPanel();
 		Ok = new JButton("OK");
 		Ok.setActionCommand("Ok");
-		Ok.setToolTipText("Beginnt das Backup.");
+		Ok.setToolTipText(messages.getString("OKToolTip"));
         
 		Cancel = new JButton("Cancel");
 		Cancel.setActionCommand("Cancel");
-		Cancel.setToolTipText("Beendet das Programm.");
+		Cancel.setToolTipText(messages.getString("CancelToolTip"));
 		
 		CancelP = new JButton("Cancel");
 		CancelP.setActionCommand("Cancel");
-		CancelP.setToolTipText("Beendet das Programm.");
+		CancelP.setToolTipText(messages.getString("CancelToolTip"));
 		
-		Source = new JButton("Quellordner auswählen...");
+		Source = new JButton(messages.getString("ChangeSource"));
 		Source.setActionCommand("Source");
 		
-		Dest = new JButton("Zielordner auswählen...");
+		Dest = new JButton(messages.getString("ChangeDest"));
 		Dest.setActionCommand("Dest");
 		
-		SourceTitle = new JLabel("  Der aktuelle Pfad zum Quellverzeichnis ist:  ");
-		DestTitle = new JLabel("  Der aktuelle Pfad zum Zielverzeichnis ist:  ");
+		SourceTitle = new JLabel("  " + messages.getString("SourcePath") + "  ");
+		DestTitle = new JLabel("  "+ messages.getString("DestPath") + "  ");
 		SourcePath = new JLabel("  " + SourceDir + "  ");
 		DestPath = new JLabel("  " + OutDir + "  ");
 		
-		CheckSumOnFinish = new JCheckBox("Berechne Prüfsumme über kopierte Dateien");
-		CheckSumOnFinish.setToolTipText("Berechnet die Prüfsumme für die kopierten Dateien, um sicherzustellen, dass alle Dateien richtig kopiert worden sind. "
-				+ "Bei schwachen CPUs oder großen Dateien kann dieser Vorgang länger dauern.");
-
+		CheckSumOnFinish = new JCheckBox(messages.getString("CheckSumFinished"));
+		CheckSumOnFinish.setToolTipText(messages.getString("CheckSumFinishedToolTip"));
 		CheckSumOnFinish.setSelected(true);
 		CheckSumOnFinish.setActionCommand("CheckSumOnFinish");
 		
 		CheckSumOldDir = new JCheckBox("Berechne Prüfsumme über altes Backups");
-		CheckSumOldDir.setToolTipText("Berechnet die Prüfsumme für altes Backup(falls vorhanden), um zu überprüfen, ob ein Backup überhaupt notwendig ist. "
-				+ "Bei schwachen CPUs oder großen Dateien kann dieser Vorgang länger dauern.");
+		CheckSumOldDir.setToolTipText(messages.getString("CheckSumOldDirToolTip"));
 		CheckSumOldDir.setSelected(true);
 		CheckSumOldDir.setActionCommand("CheckSumOldDir");
 		
+		//TODO Replace w/ ProgressBar
 		ProgressText = new JLabel("Arbeitet... Dieser Vorgang kann einige Zeit dauern");
 		ProgressTextCancel = new JLabel("Breche ab...");
 		
@@ -174,11 +175,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		//TODO Change to last dir?
 		if(DirChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			Dir = DirChooser.getSelectedFile().toString() + "/";
-			logger.finer("Neuer " + label + " ist " + Dir);
 			label.setText(Dir);
-		}
-		else {
-			logger.finer("Kein neuer "+ label +" wurde festgelegt.");
 		}
 		return Dir;
 	}	
@@ -194,12 +191,12 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		Window window = SwingUtilities.windowForComponent(Cancel);
 		switch(Event) {
 		case "Source":
-			SourceDir = chooseDir("Bitte wählen Sie das Quellverzeichnis aus!", SourcePath , SourceDir);
+			SourceDir = chooseDir(messages.getString("ChooseSourceDir"), SourcePath , SourceDir);
 			window.pack();
 			window.setLocation(dim.width/2-window.getSize().width/2, dim.height/2-window.getSize().height/2);
 			break;
 		case "Dest":
-			OutDir = chooseDir("Bitte wählen Sie das Zielverzeichnis aus!", DestPath , OutDir);
+			OutDir = chooseDir(messages.getString("ChooseOutDir"), DestPath , OutDir);
 			window.pack();
 			window.setLocation(dim.width/2-window.getSize().width/2, dim.height/2-window.getSize().height/2);
 			break;
@@ -216,14 +213,14 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 			break;
 		case "Cancel":
 			if(BackupInProgress == false) {
-				logger.info("Beende Programm durch Benutzer");
+				logger.info(messages.getString("UserDir"));
 				getContentPane().removeAll();
 				getContentPane().add(ProgressCancel);
 				window.repaint();
 				printAll(getGraphics());
 				System.exit(0);
 			}
-			else if(JOptionPane.showConfirmDialog(null, "Es wurden möglicherweise noch nicht alle Dateien kopiert. Fortfahren?") == 0) {
+			else if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0) {
 				//Das Funktioniert noch nicht, da System.exit den Thread direkt killt
 				//TODO In Shutdown-Hook verschieben
 				getContentPane().removeAll();

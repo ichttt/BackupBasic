@@ -12,6 +12,7 @@ import java.io.SequenceInputStream;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +26,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 public class CalcCheckSum
 {
 	private static final Logger logger = Logger.getLogger(CalcCheckSum.class.getName());
+	private static final ResourceBundle messages = Main.getMessages();
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -42,7 +44,7 @@ public class CalcCheckSum
 	    assert (dirToCollect.isDirectory());
 	    dir = dirToCollect;
 	    Vector<FileInputStream> fileStreams = new Vector<FileInputStream>();
-		logger.finest("Found files for hashing:");
+		logger.finest(messages.getString("ListFiles"));
 	    collectInputStreams(dirToCollect, fileStreams);
 	    int fileStreamsLength = fileStreams.toArray().length;
 	    finishedInputStreams = fileStreams;
@@ -70,7 +72,7 @@ public class CalcCheckSum
 	        return md5Hash;
 	    }
 	    catch (IOException e) {
-	        throw new RuntimeException("Fehler beim Lesen von Dateien im Verzeichnis " + dirToHash.getAbsolutePath(), e);
+	        throw new RuntimeException(messages.getString("ReadErrorDir") + dirToHash.getAbsolutePath(), e);
 	    }
 
 	}
@@ -92,8 +94,6 @@ public class CalcCheckSum
 	        }
 	        else {
 	            try {
-	            	//Zu viel Spam
-	            	//logger.finest("\t" + f.getAbsolutePath());
 	                foundStreams.add(new FileInputStream(f));
 	            }
 	            catch (FileNotFoundException e) {

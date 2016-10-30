@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
  */
 public class CopyManager {
 	private static final Logger logger = Logger.getLogger(CopyManager.class.getName());
+	private static final ResourceBundle messages = Main.getMessages();
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -80,7 +82,7 @@ public class CopyManager {
 		CopyingFiles = true;
 		for (int i = 0; i < Dateiliste.length; i++) {
 			if(StopCopy == true) {
-				logger.finer("Letzte Datei wurde erfolgreich kopiert");
+				logger.finer(messages.getString("CopyCancelSuccess"));
 				CopyStopped = true;
 				try {
 					Thread.sleep(200);
@@ -90,7 +92,7 @@ public class CopyManager {
 			}
 			
 			if(Dateiliste[i].isFile()) {
-				logger.fine("Kopiere Datei " + sourceDir + Dateiliste[i].getName()+ "...");
+				logger.fine(messages.getString("CopyingFile") + sourceDir + Dateiliste[i].getName()+ "...");
 				String Save = Dateiliste[i].getName();
 				File Source = new File(sourceDir + Save);
 				File Out = new File(outDir + Save);
@@ -98,7 +100,7 @@ public class CopyManager {
 					Files.copy(Source.toPath(), Out.toPath());
 				}
 				catch (IOException e) {
-					logger.severe("Fehler beim Kopieren der Dateien, breche ab!");
+					logger.severe(messages.getString("CopyErrorAbort"));
 					e.printStackTrace();
 					System.exit(1);
 				}
@@ -122,24 +124,24 @@ public class CopyManager {
 		
 		if(calcCheckSumOnFinish) {
 			CalcCheckSum Calc = new CalcCheckSum();
-			logger.info("Berechne Prüfsumme der kopierten Dateien");
+			logger.info(messages.getString("CheckSumCopiedFiles"));
 			Calc.collectStreams(outDir);
 			String OutDirMD5 = Calc.calcMD5HashForDir(outDir);
 		
 			if(OutDirMD5.equals(sourceDirMD5)) {
-				logger.info("Prüfsummen der kopierten Dateien stimmen überein.");
+				logger.info(messages.getString("CheckSumCopiedFilesSuccess"));
 			}
 			else {
-				logger.severe("Prüfsummen der kopierten Dateien stimmen nicht überein!");
+				logger.severe(messages.getString("CheckSumCopiedFilesError"));
 				if(canUseGui) {
-					JOptionPane.showMessageDialog(null, "Die Kopierten Dateien sind Fehlerhaft! Bitte versuchen Sie es erneut!", "Prüfsummenfehler" ,JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, messages.getString("CheckSumCopiedFilesError"), "CheckSumError" ,JOptionPane.ERROR_MESSAGE);
 				}
 				System.exit(954);
 			}
 		}
-		logger.info("Backup erfolgreich erstellt!");
+		logger.info(messages.getString("CopySuccess"));
 		if(canUseGui) {
-			JOptionPane.showMessageDialog(null, "Backup erfolgreich erstellt!");
+			JOptionPane.showMessageDialog(null, messages.getString("CopySuccess"));
 		}
 		System.exit(0);
 	}
@@ -166,9 +168,6 @@ public class CopyManager {
 		//Init, da sonst Fehler(wird immer noch später gesetzt)
 		int sourceDirFilesCount = -1;
 		int saveDirFilesCount;
-		long timeTakenCollectStreamsStart;
-		float timeTakenTotal;
-		long timeTakenCalcMD5;
 		
 		outDirRaw = new File(OutDirRawString);
 		sourceDir = new File(SourceDirString);	
@@ -176,22 +175,22 @@ public class CopyManager {
 		outDir = new File(outDirString);
 		
 		if(!sourceDir.exists()||!sourceDir.isDirectory()) {
-			logger.warning("Quellverzeichnis nicht gefunden, Abbruch!");
+			logger.warning(messages.getString("SourceDirNotFound"));
 			if(canUseGui) {
-				JOptionPane.showMessageDialog(null, "Quellverzeichnis nicht gefunden, Abbruch!", "Verzeichnis nicht gefunden" , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, messages.getString("SourceDirNotFound"), messages.getString("SourceDirNotFoundTitle") , JOptionPane.WARNING_MESSAGE);
 			}
 			System.exit(0);
 		}
-		logger.fine("Das Quellverzeichnis ist "+ sourceDir);
-		logger.fine("Das Zielverzeichnis ist " + outDirRaw);
+		logger.fine(messages.getString("SourceDir")+ sourceDir);
+		logger.fine(messages.getString("OutDir") + outDirRaw);
 		
 		//Versuche, Save Verzeichnis zur Erstellen. Falls es schon vorhanden ist, geschieht nichts
 		outDirRaw.mkdir();
 		
 		if(outDir.exists()) {
-			logger.warning("Save wurde in der letzen Minute schon erstellt");
+			logger.warning(messages.getString("SaveDoneThisMinute"));
 			if(canUseGui) {
-				JOptionPane.showMessageDialog(null, "Save wurde in der letzen Minute schon erstellt");
+				JOptionPane.showMessageDialog(null, messages.getString("SaveDoneThisMinute"));
 			}
 			System.exit(0);
 		}
@@ -199,21 +198,13 @@ public class CopyManager {
 		savesList = outDirRaw.listFiles();
 		savesCount = savesList.length;
 		
-		logger.info("Berechne Prüfsumme der Quelldateien");
 		CalcCheckSum Calc = new CalcCheckSum();
 
 		if(calcCheckSumOldDir|| calcCheckSumOnFinish) {
-			timeTakenCollectStreamsStart = System.nanoTime();
+			logger.info(messages.getString("CheckSumSourceDir"));
 			sourceDirFilesCount = Calc.collectStreams(sourceDir);
-			timeTakenTotal = System.nanoTime() - timeTakenCollectStreamsStart;
-			logger.finer(sourceDirFilesCount + " Dateien im Quellverzeichnis");
-			logger.fine("collectStreams dauerte " + timeTakenTotal/1000000000 + " Sekunden");
-
-
-			timeTakenCalcMD5 = System.nanoTime();
+			logger.finer(sourceDirFilesCount + messages.getString("FilesInSourceDir"));
 			sourceDirMD5 = Calc.calcMD5HashForDir(sourceDir);
-			timeTakenTotal = System.nanoTime() - timeTakenCalcMD5;
-			logger.fine("calcMD5HashForDir dauerte " + timeTakenTotal/1000000000 + " Sekunden");
 		}
 		
 		if(savesCount>=1 && calcCheckSumOldDir) {
@@ -221,22 +212,20 @@ public class CopyManager {
 			assert sourceDirFilesCount != -1;
 			//Wir brauchen die Prüfsumme der alten Dateien erst gar nicht zu überprüfen, wenn die Ordner verschieden viele Dateien enthalten
 			saveDirFilesCount = Calc.collectStreams(savesList[savesCount -1]);
-			logger.finer(saveDirFilesCount + " Dateien im altem Backup");
+			logger.finer(saveDirFilesCount + messages.getString("FilesInOutDir"));
 			if(saveDirFilesCount != sourceDirFilesCount) {
-				logger.info("Überspringe Berechnung der Prüfsummen des alten Backups. Grund: Anzahl der Dateien ist unterschiedlich");
+				logger.info(messages.getString("SkipCheckSum"));
 			}
 			
 			else {
 				//Prüfsummenbrechnung des alten Verzeichnisses
-				logger.info("Berechne Prüfsumme des alten Backups");
+				logger.info(messages.getString("CheckSumOldDir"));
 				oldDirMD5 = Calc.calcMD5HashForDir(savesList[savesCount -1]);
-				logger.fine("Berechnete Prüfsumme für altes Verzeichnis: " + oldDirMD5);
-				logger.fine("Berechnete Prüfsumme für neues Verzeichnis: " + sourceDirMD5);
 				if(sourceDirMD5.equals(oldDirMD5)) {
 					//Falls das Backup nicht erledigt werden musst, sollte dies erfüllt sein
-					logger.info("Kein Backup erstellt, da alle Dateien identisch waren!");
+					logger.info(messages.getString("SkipCopy"));
 					if(canUseGui) {
-						JOptionPane.showMessageDialog(null, "Kein Backup erstellt, da alle Dateien identisch waren!");
+						JOptionPane.showMessageDialog(null, messages.getString("SkipCopy"));
 					}
 					System.exit(0);
 				}
@@ -244,8 +233,8 @@ public class CopyManager {
 		}
 		
 		outDir.mkdir();
-		logger.finer("Erstelle Verzeichnis: " + outDir);
-		logger.info("Starte Kopieren");
+		logger.finer(messages.getString("CreatingDir") + outDir);
+		logger.info(messages.getString("CopyStarted"));
 		CopyMgr.executeCopyDir(SourceDirString, outDirString);
 		doWhenCopyDone(outDir, sourceDirMD5, canUseGui);
 	}

@@ -4,6 +4,7 @@ package backupBasic.backup;
  */
 
 import java.awt.GraphicsEnvironment;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ public class ArgParser {
 	
 	//TODO Jopt-simple implementieren
 	private static final Logger logger = Logger.getLogger(ArgParser.class.getName());
+	private static final ResourceBundle messages = Main.getMessages();
 	static {
 		logger.setLevel(Level.ALL);
 	}
@@ -53,7 +55,7 @@ public class ArgParser {
 				CopyManager.calcCheckSumOnFinish = true;
 			}
 			else {
-				logger.severe("Benutzung: Backup.jar SourcePath(String or default) DestPath(String or default) [ChecksumOldDir] (true (Standard), false) [ChecksumFinished] (true (Standard), false)");
+				logger.severe(messages.getString("Usage"));
 				System.exit(0);
 			}
 		//Quellverzeichnis, Zielverzeichnis, ChecksumOldDir
@@ -66,7 +68,7 @@ public class ArgParser {
 				CopyManager.calcCheckSumOnFinish = true;
 			}
 			else {
-				logger.severe("Benutzung: Backup.jar SourcePath(String or default) DestPath(String or default) [ChecksumOldDir] (true (Standard), false) [ChecksumFinished] (true (Standard), false)");
+				logger.severe(messages.getString("Usage"));
 				System.exit(0);
 			}
 		//Quellverzeichnis, Zielverzeichnis
@@ -75,7 +77,7 @@ public class ArgParser {
 				SourceDir = setLastCharSlash(args[1]);
 			}
 			else {
-				logger.fine("Benutze Standardwert für OutDir");
+				logger.fine(messages.getString("DefaultOut"));
 			}
 		case 1:
 			//Quellverzeichnis
@@ -83,7 +85,7 @@ public class ArgParser {
 				SourceDir = setLastCharSlash(args[0]);
 			}
 			else {
-				logger.fine("Benutze Standardwert für SourceDir");
+				logger.fine(messages.getString("DefaultSource"));
 			}
 			CopyManager.copyDir(OutDirRaw, SourceDir);
 			break;
@@ -93,14 +95,14 @@ public class ArgParser {
 				GuiCreator.createGui(OutDirRaw, SourceDir);
 			}
 			else {
-				logger.severe("Auf Systemen ohne GUI sind die Parameter SourcePath und DestPath nötig");
-				logger.severe("Benutzung: Backup.jar SourcePath(String or default) DestPath(String or default) [ChecksumOldDir] (true (Standard), false) [ChecksumFinished] (true (Standard), false)");
+				logger.severe(messages.getString("NotEnoughArgs"));
+				logger.severe(messages.getString("Usage"));
 			}
 			break;
 			
 		//Zu viele Parameter
 		default:
-			logger.severe("Benutzung: Backup.jar SourcePath(String or default) DestPath(String or default) [ChecksumOldDir] (true (Standard), false) [ChecksumFinished] (true (Standard), false)");
+			logger.severe(messages.getString("Usage"));
 			break;
 		}
 		
