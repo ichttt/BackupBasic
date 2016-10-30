@@ -72,9 +72,8 @@ public class Main {
 			messages = ResourceBundle.getBundle("BackupBasic", currentLocale);
 		}
 		catch(MissingResourceException e) {
-			//TODO Change to English, when Localisation done
-			System.out.println("Fallback: German");
-			messages = ResourceBundle.getBundle("BackupBasic", new Locale("de", "DE"));
+			System.out.println("Fallback: English");
+			messages = ResourceBundle.getBundle("BackupBasic", new Locale("en", "US"));
 		}
 		initLogging();
 		ArgParser.parseArgs(args);
