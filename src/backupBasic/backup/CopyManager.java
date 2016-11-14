@@ -67,7 +67,7 @@ public class CopyManager {
 			//TODO Was sollten wir hier tun?
 		}
 		//Nach Timeout einfach abbrechen
-		if(CopyStopped == false && Wait <Timeout) {
+		if(!CopyStopped && Wait <Timeout) {
 			stopBackup(Timeout);
 		}
 	}
@@ -80,8 +80,8 @@ public class CopyManager {
 	private void executeCopyDir(String sourceDir, String outDir) {
 		File[] Dateiliste = new File(sourceDir).listFiles();
 		CopyingFiles = true;
-		for (int i = 0; i < Dateiliste.length; i++) {
-			if(StopCopy == true) {
+		for (File file : Dateiliste) {
+			if(StopCopy) {
 				logger.finer(messages.getString("CopyCancelSuccess"));
 				CopyStopped = true;
 				try {
@@ -91,9 +91,9 @@ public class CopyManager {
 				}
 			}
 			
-			if(Dateiliste[i].isFile()) {
-				logger.fine(messages.getString("CopyingFile") + sourceDir + Dateiliste[i].getName()+ "...");
-				String Save = Dateiliste[i].getName();
+			if(file.isFile()) {
+				logger.fine(messages.getString("CopyingFile") + sourceDir + file.getName()+ "...");
+				String Save = file.getName();
 				File Source = new File(sourceDir + Save);
 				File Out = new File(outDir + Save);
 				try {
@@ -106,9 +106,9 @@ public class CopyManager {
 				}
 			}
 			else {
-				File CreateSubDir = new File(outDir + Dateiliste[i].getName());
+				File CreateSubDir = new File(outDir + file.getName());
 				CreateSubDir.mkdir();
-				executeCopyDir(Dateiliste[i].toString() + "/", outDir + Dateiliste[i].getName() + "/");
+				executeCopyDir(file.toString() + "/", outDir + file.getName() + "/");
 			}
 		}
 		CopyingFiles = false;
@@ -156,18 +156,14 @@ public class CopyManager {
 		CopyManager CopyMgr = new CopyManager();
 		
 		final boolean canUseGui = !GraphicsEnvironment.isHeadless();
-		File outDirRaw;
-		File sourceDir;	
-		File outDir;
+		File outDirRaw, outDir, sourceDir;
 		File[] savesList;
-		String outDirString;
+		String outDirString, oldDirMD5;
 		//Init, da sonst Fehler(wird immer noch später gesetzt)
 		String sourceDirMD5 = "";
-		String oldDirMD5;
-		int savesCount;
+		int savesCount, saveDirFilesCount;
 		//Init, da sonst Fehler(wird immer noch später gesetzt)
 		int sourceDirFilesCount = -1;
-		int saveDirFilesCount;
 		
 		outDirRaw = new File(OutDirRawString);
 		sourceDir = new File(SourceDirString);	
@@ -208,7 +204,7 @@ public class CopyManager {
 		}
 		
 		if(savesCount>=1 && calcCheckSumOldDir) {
-			assert sourceDirMD5 != "";
+			assert !sourceDirMD5.equals("");
 			assert sourceDirFilesCount != -1;
 			//Wir brauchen die Prüfsumme der alten Dateien erst gar nicht zu überprüfen, wenn die Ordner verschieden viele Dateien enthalten
 			saveDirFilesCount = Calc.collectStreams(savesList[savesCount -1]);

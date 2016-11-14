@@ -44,10 +44,10 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	//Für Cancel-Button
 	private static boolean BackupInProgress = false;
 
-	private JPanel MainContent, ProgressContent, ProgressCancel;
+	private JPanel MainContent, ProgressContent;
 	private JButton Ok, Cancel, Source, Dest, CancelP;
 	private JLabel SourceTitle, DestTitle, SourcePath, DestPath;
-	private JLabel ProgressText, ProgressTextCancel;
+	private JLabel ProgressText;
 	private JCheckBox CheckSumOnFinish, CheckSumOldDir;
 	
     public GuiCreator() {
@@ -63,7 +63,6 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		
 		MainContent = new JPanel();
     	ProgressContent = new JPanel();
-    	ProgressCancel = new JPanel();
 		Ok = new JButton("OK");
 		Ok.setActionCommand("Ok");
 		Ok.setToolTipText(messages.getString("OKToolTip"));
@@ -99,7 +98,6 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		
 		//TODO Replace w/ ProgressBar
 		ProgressText = new JLabel("Arbeitet... Dieser Vorgang kann einige Zeit dauern");
-		ProgressTextCancel = new JLabel("Breche ab...");
 		
 		SourceTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		DestTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -135,7 +133,6 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		MainContent.add(CheckSumOldDir);
 		ProgressContent.add(ProgressText);
 		ProgressContent.add(CancelP);
-		ProgressCancel.add(ProgressTextCancel);
         add(MainContent);
     }
     
@@ -213,22 +210,11 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 			break;
 		case "Cancel":
 			if(BackupInProgress == false) {
-				logger.info(messages.getString("UserDir"));
-				getContentPane().removeAll();
-				getContentPane().add(ProgressCancel);
-				window.repaint();
-				printAll(getGraphics());
+				logger.info(messages.getString("UserExit"));
 				System.exit(0);
 			}
-			else if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0) {
-				//Das Funktioniert noch nicht, da System.exit den Thread direkt killt
-				//TODO In Shutdown-Hook verschieben
-				getContentPane().removeAll();
-				getContentPane().add(ProgressCancel);
-				window.repaint();
-				printAll(getGraphics());
+			else if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0)
 				System.exit(0);
-			}
 			break;
 		}
 	}
@@ -236,6 +222,7 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	@Override
 	public void uncaughtException(Thread t, Throwable e) {
 		e.printStackTrace();
+		//TODO i18n
 		JOptionPane.showMessageDialog(null, "Unbehandelte Ausnahme beim Verarbeiten des Knopfdruckes. Das Programm funktioniert möglicherweise nicht wie erwartet.\nFehler:"
 									  + e + "\nWeitere Informationen in der Console", "ERROR" , JOptionPane.ERROR_MESSAGE);
 	}
