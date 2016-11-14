@@ -82,11 +82,7 @@ public class CalcCheckSum
 
 	    File[] fileList = dir.listFiles();
 	    Arrays.sort(fileList,               // Need in reproducible order
-	                new Comparator<File>() {
-	                    public int compare(File f1, File f2) {                       
-	                        return f1.getName().compareTo(f2.getName());
-	                    }
-	                });
+				(f1, f2) -> f1.getName().compareTo(f2.getName()));
 
 	    for (File f : fileList) {
 	    	if (f.isDirectory()) {

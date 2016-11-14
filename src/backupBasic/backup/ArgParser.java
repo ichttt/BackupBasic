@@ -34,7 +34,7 @@ public class ArgParser {
 	
 	/**
 	 * Verwaltet Kommandozeilenargumente und gibt an GUICreator oder CopyManager ab
-	 * @param args
+	 * @param args Argumente zum Parsen
 	 */
 	public static void parseArgs(String[] args) {
 		final boolean CanUseGui = !GraphicsEnvironment.isHeadless();

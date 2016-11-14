@@ -11,8 +11,6 @@ import backupBasic.backup.CopyManager;
  * @author Tobias Hotz
  */
 public class ActionListenerCheckBox implements ActionListener {
-	
-	//TODO Nötig?
 	@Override
 	public void actionPerformed(ActionEvent ActionEvent) {
 		Thread.setDefaultUncaughtExceptionHandler(new GuiCreator());

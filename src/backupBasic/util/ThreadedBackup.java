@@ -70,7 +70,7 @@ public class ThreadedBackup implements Runnable, Thread.UncaughtExceptionHandler
 	}
 	
 	public static void shutdownManager() {
-		if(CopyManager.CopyingFiles == true) {
+		if(CopyManager.CopyingFiles) {
 			logger.info(messages.getString("RegisterStop"));
 			//Timeout von 2 Sekunden, sonst wird der Vorgang abgebrochen
 			CopyManager.stopBackup(20);

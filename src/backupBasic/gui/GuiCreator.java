@@ -209,13 +209,14 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 			ThreadedBackup.startThreadedBackup();
 			break;
 		case "Cancel":
-			if(BackupInProgress == false) {
-				logger.info(messages.getString("UserExit"));
-				System.exit(0);
-			}
-			else if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0)
-				System.exit(0);
-			break;
+            if (!BackupInProgress) {
+                logger.info(messages.getString("UserExit"));
+                System.exit(0);
+            } else {
+                if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0)
+                    System.exit(0);
+            }
+            break;
 		}
 	}
 
