@@ -100,29 +100,3 @@ public class CalcCheckSum
 
 	}
 }
-/* Mein Alter Versuch, SHA für Dateien zu berechnen , ging nur für Hauptordner
- //Wenn wir keinen alten Save haben, müssen wir sowieso ein Backup erstellen.
-				if(SavesCount >=1)
-				{
-					//Benutze Sha512, um sicherzustellen, dass es sich um die gleichen Dateien handelt
-					InputStream inStream = new FileInputStream(Source);
-					String Sha512in = DigestUtils.sha512Hex(inStream);
-					File LastFile = new File(SavesList[SavesCount - 1].toString() + "/" + Save);
-					try
-					{
-						//Hier kann es sein, dass das letzte Backup nicht vollstündig was oder neue Dateien hinzugefügt wurden.
-						InputStream outStream  = new FileInputStream(LastFile);
-						String Sha512out = DigestUtils.sha512Hex(outStream);
-						if(Sha512in.equals(Sha512out))
-						{
-							System.out.println("[Info] [DiffMgr] Datei muss nicht kopiert werden, da identisch mit altem Backup");
-							CopyFile=false;
-						}
-					}
-					catch(FileNotFoundException e)
-					{
-						System.out.println("[Warnung] [DiffMgr] Letze Datei wurde nicht gefunden!");
-						CopyFile = true;
-					}
-				}
-				*/
