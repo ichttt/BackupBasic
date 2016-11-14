@@ -2,6 +2,8 @@ package backupBasic.backup;
 /*(c)2016, Tobias Hotz
  * Further Information can be found in Info.txt
  */
+import backupBasic.gui.GuiCreator;
+
 import java.awt.GraphicsEnvironment;
 
 import java.io.File;
@@ -121,7 +123,7 @@ public class CopyManager {
 	 * @param canUseGui
 	 */
 	private static void doWhenCopyDone(File outDir, String sourceDirMD5, boolean canUseGui) {
-		
+		GuiCreator.progress.setValue(3);
 		if(calcCheckSumOnFinish) {
 			CalcCheckSum Calc = new CalcCheckSum();
 			logger.info(messages.getString("CheckSumCopiedFiles"));
@@ -195,14 +197,14 @@ public class CopyManager {
 		savesCount = savesList.length;
 		
 		CalcCheckSum Calc = new CalcCheckSum();
-
+		GuiCreator.progress.setValue(0);
 		if(calcCheckSumOldDir|| calcCheckSumOnFinish) {
 			logger.info(messages.getString("CheckSumSourceDir"));
 			sourceDirFilesCount = Calc.collectStreams(sourceDir);
 			logger.finer(sourceDirFilesCount + messages.getString("FilesInSourceDir"));
 			sourceDirMD5 = Calc.calcMD5HashForDir(sourceDir);
 		}
-		
+		GuiCreator.progress.setValue(1);
 		if(savesCount>=1 && calcCheckSumOldDir) {
 			assert !sourceDirMD5.equals("");
 			assert sourceDirFilesCount != -1;
@@ -231,6 +233,7 @@ public class CopyManager {
 		outDir.mkdir();
 		logger.finer(messages.getString("CreatingDir") + outDir);
 		logger.info(messages.getString("CopyStarted"));
+		GuiCreator.progress.setValue(2);
 		CopyMgr.executeCopyDir(SourceDirString, outDirString);
 		doWhenCopyDone(outDir, sourceDirMD5, canUseGui);
 	}

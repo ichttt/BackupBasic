@@ -12,15 +12,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import backupBasic.backup.Main;
 import backupBasic.util.ThreadedBackup;
@@ -49,6 +41,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 	private JLabel SourceTitle, DestTitle, SourcePath, DestPath;
 	private JLabel ProgressText;
 	private JCheckBox CheckSumOnFinish, CheckSumOldDir;
+	public static JProgressBar progress;
 	
     public GuiCreator() {
     	createPanel();
@@ -80,7 +73,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 		
 		Dest = new JButton(messages.getString("ChangeDest"));
 		Dest.setActionCommand("Dest");
-		
+
 		SourceTitle = new JLabel("  " + messages.getString("SourcePath") + "  ");
 		DestTitle = new JLabel("  "+ messages.getString("DestPath") + "  ");
 		SourcePath = new JLabel("  " + SourceDir + "  ");
@@ -97,6 +90,9 @@ public class GuiCreator extends JFrame implements ActionListener {
 		CheckSumOldDir.setActionCommand("CheckSumOldDir");
 		
 		//TODO Replace w/ ProgressBar
+		progress = new JProgressBar();
+		progress.setMinimum(0);
+		progress.setMaximum(4);
 		ProgressText = new JLabel("Arbeitet... Dieser Vorgang kann einige Zeit dauern");
 		
 		SourceTitle.setHorizontalAlignment(SwingConstants.CENTER);
@@ -132,6 +128,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 		MainContent.add(CheckSumOnFinish);
 		MainContent.add(CheckSumOldDir);
 		ProgressContent.add(ProgressText);
+		ProgressContent.add(progress);
 		ProgressContent.add(CancelP);
         add(MainContent);
     }
