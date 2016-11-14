@@ -27,7 +27,7 @@ public class Main {
 	 * Verwaltet das Logging-System
 	 */
 	private static void initLogging() {
-		Handler fileHandler = null;
+		Handler fileHandler;
 		try {
 			if(System.getProperty("os.name").startsWith("Windows")) {
 				//Ordner erstellen
@@ -39,7 +39,7 @@ public class Main {
 				new File(System.getProperty("user.home") + "BackupBasic").mkdirs();
 				fileHandler = new FileHandler(System.getProperty("user.home")+ "/BackupBasic/LogBackupBasic.xml");
 			}
-			//Fügt FileHandler global hinzu
+			//FÃ¼gt FileHandler global hinzu
 		    logger.getParent().addHandler(fileHandler);
 		}
 		catch (IOException e) {
@@ -57,7 +57,6 @@ public class Main {
 	
 	/**
 	 * Verwaltet das Logging-System und gibt dann an den ArgParser ab
-	 * @param args
 	 */
 	public static void main(String[] args) {
 		Locale currentLocale;
@@ -69,11 +68,11 @@ public class Main {
 		
 		currentLocale = new Locale(userLanguage, userCountry);
 		try {
-			messages = ResourceBundle.getBundle("BackupBasic", currentLocale);
+			messages = ResourceBundle.getBundle("backupBasic\\BackupBasic", currentLocale);
 		}
 		catch(MissingResourceException e) {
 			System.out.println("Fallback: English");
-			messages = ResourceBundle.getBundle("BackupBasic", new Locale("en", "US"));
+			messages = ResourceBundle.getBundle("backupBasic\\BackupBasic", new Locale("en", "US"));
 		}
 		initLogging();
 		ArgParser.parseArgs(args);

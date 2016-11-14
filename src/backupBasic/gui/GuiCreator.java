@@ -87,12 +87,12 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 		SourcePath = new JLabel("  " + SourceDir + "  ");
 		DestPath = new JLabel("  " + OutDir + "  ");
 		
-		CheckSumOnFinish = new JCheckBox(messages.getString("CheckSumFinished"));
+		CheckSumOnFinish = new JCheckBox(messages.getString("CheckSumFinishedButton"));
 		CheckSumOnFinish.setToolTipText(messages.getString("CheckSumFinishedToolTip"));
 		CheckSumOnFinish.setSelected(true);
 		CheckSumOnFinish.setActionCommand("CheckSumOnFinish");
 		
-		CheckSumOldDir = new JCheckBox(messages.getString("CheckSumOldDir"));
+		CheckSumOldDir = new JCheckBox(messages.getString("CheckSumOldDirButton"));
 		CheckSumOldDir.setToolTipText(messages.getString("CheckSumOldDirToolTip"));
 		CheckSumOldDir.setSelected(true);
 		CheckSumOldDir.setActionCommand("CheckSumOldDir");
