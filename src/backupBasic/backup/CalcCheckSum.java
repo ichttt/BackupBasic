@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.SequenceInputStream;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
