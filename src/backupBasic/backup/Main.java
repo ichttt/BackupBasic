@@ -3,6 +3,8 @@ package backupBasic.backup;
  * Further Information can be found in Info.txt
  */
 
+import javax.swing.JOptionPane;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
@@ -16,7 +18,7 @@ import java.util.logging.Logger;
 /**
  * @author Tobias Hotz
  */
-public class Main {
+public class Main implements Thread.UncaughtExceptionHandler {
 	private static final Logger logger = Logger.getLogger(Main.class.getName());
 	private static ResourceBundle messages;
 	static {
@@ -59,6 +61,7 @@ public class Main {
 	 * Verwaltet das Logging-System und gibt dann an den ArgParser ab
 	 */
 	public static void main(String[] args) {
+		Thread.setDefaultUncaughtExceptionHandler(new Main());
 		Locale currentLocale;
 		String userLanguage;
 		String userCountry;
@@ -76,5 +79,15 @@ public class Main {
 		}
 		initLogging();
 		ArgParser.parseArgs(args);
+	}
+
+	@Override
+	public void uncaughtException(Thread t, Throwable e) {
+		logger.severe(messages.getString("UncaughtException") + "\t Stacktrace:");
+		e.printStackTrace();
+		if(!GraphicsEnvironment.isHeadless()) {
+			JOptionPane.showMessageDialog(null, messages.getString("UncaughtException") + "\n" + messages.getString("Error") + ": "+ e +"\n" +  messages.getString("Details"), "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+		System.exit(-1);
 	}
 }

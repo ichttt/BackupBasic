@@ -14,7 +14,7 @@ import backupBasic.gui.GuiCreator;
 /**
  * @author Tobias Hotz
  */
-public class ThreadedBackup implements Runnable, Thread.UncaughtExceptionHandler {
+public class ThreadedBackup implements Runnable {
 	private static final Logger logger = Logger.getLogger(ThreadedBackup.class.getName());
 	private static final ResourceBundle messages = Main.getMessages();
 	static {
@@ -22,12 +22,10 @@ public class ThreadedBackup implements Runnable, Thread.UncaughtExceptionHandler
 	}
 	
 	public static void startThreadedBackup() {
-		Thread.UncaughtExceptionHandler eh = new ThreadedBackup();
-		
+
         Thread myThread = new Thread(new ThreadedBackup());
         myThread.setDaemon(true);
         myThread.setName("Copy Thread");
-        myThread.setUncaughtExceptionHandler(eh);
         myThread.start();
         
 	}
@@ -70,28 +68,17 @@ public class ThreadedBackup implements Runnable, Thread.UncaughtExceptionHandler
 	}
 	
 	public static void shutdownManager() {
-		if(CopyManager.CopyingFiles) {
+		if (CopyManager.CopyingFiles) {
 			logger.info(messages.getString("RegisterStop"));
 			//Timeout von 2 Sekunden, sonst wird der Vorgang abgebrochen
 			CopyManager.stopBackup(20);
 			//Falls das Kopieren nicht gestoppt wurde, abbrechen
-			if(CopyManager.getCopyStopped()) {
+			if (CopyManager.getCopyStopped()) {
 				writeExitStatus(messages.getString("CopyInterrupted"), "INTERRUPTED.txt");
-			}
-			else {
+			} else {
 				writeExitStatus(messages.getString("CopyUnfinished"), "UNFINISHED.txt");
 			}
 		}
-	}
-
-	@Override
-	public void uncaughtException(Thread t, Throwable e) {
-        logger.severe(messages.getString("UncaughtExceptionCopyThread") + "\t Stacktrace:");
-        e.printStackTrace();
-        if(!GraphicsEnvironment.isHeadless()) {
-        	JOptionPane.showMessageDialog(null, messages.getString("UncaughtExceptionCopyThread") + "\n" + messages.getString("Error") + ": "+ e +"\n" +  messages.getString("Details"), "ERROR", JOptionPane.ERROR_MESSAGE);
-        }
-        System.exit(-1);
 	}
 
 }

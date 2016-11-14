@@ -13,7 +13,6 @@ import backupBasic.backup.CopyManager;
 public class ActionListenerCheckBox implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent ActionEvent) {
-		Thread.setDefaultUncaughtExceptionHandler(new GuiCreator());
 		String Event = ActionEvent.getActionCommand();
 		switch(Event) {
 		case "CheckSumOnFinish":

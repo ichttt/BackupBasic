@@ -28,7 +28,7 @@ import backupBasic.util.ThreadedBackup;
 /**
  * @author Tobias Hotz
  */
-public class GuiCreator extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
+public class GuiCreator extends JFrame implements ActionListener {
 	private static final Logger logger = Logger.getLogger(GuiCreator.class.getName());
 	private static final ResourceBundle messages = Main.getMessages();
 	static {
@@ -182,7 +182,6 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
 	 */
 	@Override
 	public void actionPerformed(ActionEvent ActionEvent) {
-		Thread.setDefaultUncaughtExceptionHandler(new GuiCreator());
 		
 		String Event = ActionEvent.getActionCommand();
 		Window window = SwingUtilities.windowForComponent(Cancel);
@@ -218,14 +217,6 @@ public class GuiCreator extends JFrame implements ActionListener, Thread.Uncaugh
             }
             break;
 		}
-	}
-
-	@Override
-	public void uncaughtException(Thread t, Throwable e) {
-		e.printStackTrace();
-		//TODO i18n
-		JOptionPane.showMessageDialog(null, "Unbehandelte Ausnahme beim Verarbeiten des Knopfdruckes. Das Programm funktioniert möglicherweise nicht wie erwartet.\nFehler:"
-									  + e + "\nWeitere Informationen in der Console", "ERROR" , JOptionPane.ERROR_MESSAGE);
 	}
 
 }
