@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -119,18 +120,16 @@ public class CopyManager {
 	/**
 	 * Wird aufgerufen, wenn der Kopiervorgang erfolgreich abgeschlossen wurde
 	 * @param outDir
-	 * @param sourceDirMD5
+	 * @param sourceDirFilesList
 	 * @param canUseGui
 	 */
-	private static void doWhenCopyDone(File outDir, String sourceDirMD5, boolean canUseGui) {
+	private static void doWhenCopyDone(File outDir,Vector<File> sourceDirFilesList ,boolean canUseGui) {
 		GuiCreator.progress.setValue(3);
 		if(calcCheckSumOnFinish) {
-			CalcCheckSum Calc = new CalcCheckSum();
+			DirEqualChecker dirChecker = new DirEqualChecker();
 			logger.info(messages.getString("CheckSumCopiedFiles"));
-			Calc.collectStreams(outDir);
-			String OutDirMD5 = Calc.calcMD5HashForDir(outDir);
-		
-			if(OutDirMD5.equals(sourceDirMD5)) {
+			Vector<File> outDirFilesList = dirChecker.listAllFiles(outDir);
+			if(dirChecker.checkFiles(outDirFilesList, sourceDirFilesList)) {
 				logger.info(messages.getString("CheckSumCopiedFilesSuccess"));
 			}
 			else {
@@ -160,12 +159,9 @@ public class CopyManager {
 		final boolean canUseGui = !GraphicsEnvironment.isHeadless();
 		File outDirRaw, outDir, sourceDir;
 		File[] savesList;
-		String outDirString, oldDirMD5;
-		//Init, da sonst Fehler(wird immer noch später gesetzt)
-		String sourceDirMD5 = "";
+		String outDirString;
 		int savesCount, saveDirFilesCount;
-		//Init, da sonst Fehler(wird immer noch später gesetzt)
-		int sourceDirFilesCount = -1;
+		Vector<File> sourceDirFileList = null;
 		
 		outDirRaw = new File(OutDirRawString);
 		sourceDir = new File(SourceDirString);	
@@ -196,36 +192,33 @@ public class CopyManager {
 		savesList = outDirRaw.listFiles();
 		savesCount = savesList.length;
 		
-		CalcCheckSum Calc = new CalcCheckSum();
+		DirEqualChecker dirChecker = new DirEqualChecker();
 		GuiCreator.progress.setValue(0);
 		if(calcCheckSumOldDir|| calcCheckSumOnFinish) {
 			logger.info(messages.getString("CheckSumSourceDir"));
-			sourceDirFilesCount = Calc.collectStreams(sourceDir);
-			logger.finer(sourceDirFilesCount + messages.getString("FilesInSourceDir"));
-			sourceDirMD5 = Calc.calcMD5HashForDir(sourceDir);
-		}
-		GuiCreator.progress.setValue(1);
-		if(savesCount>=1 && calcCheckSumOldDir) {
-			assert !sourceDirMD5.equals("");
-			assert sourceDirFilesCount != -1;
-			//Wir brauchen die Prüfsumme der alten Dateien erst gar nicht zu überprüfen, wenn die Ordner verschieden viele Dateien enthalten
-			saveDirFilesCount = Calc.collectStreams(savesList[savesCount -1]);
-			logger.finer(saveDirFilesCount + messages.getString("FilesInOutDir"));
-			if(saveDirFilesCount != sourceDirFilesCount) {
-				logger.info(messages.getString("SkipCheckSum"));
-			}
-			
-			else {
-				//Prüfsummenbrechnung des alten Verzeichnisses
-				logger.info(messages.getString("CheckSumOldDir"));
-				oldDirMD5 = Calc.calcMD5HashForDir(savesList[savesCount -1]);
-				if(sourceDirMD5.equals(oldDirMD5)) {
-					//Falls das Backup nicht erledigt werden musst, sollte dies erfüllt sein
-					logger.info(messages.getString("SkipCopy"));
-					if(canUseGui) {
-						JOptionPane.showMessageDialog(null, messages.getString("SkipCopy"));
+			sourceDirFileList = dirChecker.listAllFiles(sourceDir);
+			logger.finer(sourceDirFileList.size() + messages.getString("FilesInSourceDir"));
+			GuiCreator.progress.setValue(1);
+
+			if (savesCount >= 1 && calcCheckSumOldDir) {
+				// We don't need to check if there are not the same number of files
+				Vector<File> oldDirFilesList = dirChecker.listAllFiles(savesList[savesCount - 1]);
+				saveDirFilesCount = oldDirFilesList.size();
+				logger.finer(saveDirFilesCount + messages.getString("FilesInOutDir"));
+				if (oldDirFilesList.size() != sourceDirFileList.size()) {
+					logger.info(messages.getString("SkipCheckSum"));
+				} else {
+
+					//Check all Files
+					logger.info(messages.getString("CheckSumOldDir"));
+					if (dirChecker.checkFiles(sourceDirFileList, oldDirFilesList)) {
+						//We don't need to copy any files
+						logger.info(messages.getString("SkipCopy"));
+						if (canUseGui) {
+							JOptionPane.showMessageDialog(null, messages.getString("SkipCopy"));
+						}
+						System.exit(0);
 					}
-					System.exit(0);
 				}
 			}
 		}
@@ -235,7 +228,7 @@ public class CopyManager {
 		logger.info(messages.getString("CopyStarted"));
 		GuiCreator.progress.setValue(2);
 		CopyMgr.executeCopyDir(SourceDirString, outDirString);
-		doWhenCopyDone(outDir, sourceDirMD5, canUseGui);
+		doWhenCopyDone(outDir, sourceDirFileList,canUseGui);
 	}
 	
 }
