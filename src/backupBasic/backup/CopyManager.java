@@ -40,10 +40,6 @@ public class CopyManager {
 	public static boolean calcCheckSumOldDir = true ;
 	public static boolean calcCheckSumOnFinish = true;
 	
-	public static boolean getStopCopy() {
-		return StopCopy;
-	}
-	
 	/**
 	 * Wert nicht public, um ihn read-only von extern zu machen, um Fehler zu vermeiden
 	 * @return CopyStopped
