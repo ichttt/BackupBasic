@@ -1,22 +1,16 @@
 package backupBasic.util;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import backupBasic.backup.CopyManager;
-import backupBasic.backup.Main;
 import backupBasic.gui.GuiCreator;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Logger;
 /**
  * @author Tobias Hotz
  */
 public class ThreadedBackup implements Runnable {
-	private static final Logger logger = Logger.getLogger(ThreadedBackup.class.getName());
-	private static final ResourceBundle messages = Main.getMessages();
-	static {
-		logger.setLevel(Level.ALL);
-	}
+	private static final Logger logger = i18n.getLogger(ThreadedBackup.class);
 	
 	public static void startThreadedBackup() {
 
@@ -33,7 +27,7 @@ public class ThreadedBackup implements Runnable {
                 shutdownManager();
             }
         });
-        logger.finer(messages.getString("ThreadStart"));
+        logger.finer(i18n.translate("ThreadStart"));
 		String OutDir = GuiCreator.OutDir;
 		String SourceDir = GuiCreator.SourceDir;
 		CopyManager.copyDir(OutDir, SourceDir);
@@ -50,7 +44,7 @@ public class ThreadedBackup implements Runnable {
 			writer = new FileWriter(GuiCreator.OutDir + "/" + CopyManager.time + "/" + filename);
 			writer.write(stringToWrite);
 		} catch (IOException e) {
-			logger.warning(messages.getString("CannotCreateFile") + filename);
+			logger.warning(i18n.translate("CannotCreateFile") + filename);
 			e.printStackTrace();
 		}
 		finally {
@@ -66,14 +60,14 @@ public class ThreadedBackup implements Runnable {
 	
 	public static void shutdownManager() {
 		if (CopyManager.CopyingFiles) {
-			logger.info(messages.getString("RegisterStop"));
+			logger.info(i18n.translate("RegisterStop"));
 			//Timeout von 2 Sekunden, sonst wird der Vorgang abgebrochen
 			CopyManager.stopBackup(20);
 			//Falls das Kopieren nicht gestoppt wurde, abbrechen
 			if (CopyManager.getCopyStopped()) {
-				writeExitStatus(messages.getString("CopyInterrupted"), "INTERRUPTED.txt");
+				writeExitStatus(i18n.translate("CopyInterrupted"), "INTERRUPTED.txt");
 			} else {
-				writeExitStatus(messages.getString("CopyUnfinished"), "UNFINISHED.txt");
+				writeExitStatus(i18n.translate("CopyUnfinished"), "UNFINISHED.txt");
 			}
 		}
 	}

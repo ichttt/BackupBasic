@@ -2,29 +2,24 @@ package backupBasic.backup;
 /*(c)2016, Tobias Hotz
  * Further Information can be found in Info.txt
  */
+
 import backupBasic.gui.GuiCreator;
+import backupBasic.util.i18n;
 
-import java.awt.GraphicsEnvironment;
-
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.ResourceBundle;
 import java.util.Vector;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
-
-import javax.swing.JOptionPane;
 /**
  * @author Tobias Hotz
  */
 public class CopyManager {
-	private static final Logger logger = Logger.getLogger(CopyManager.class.getName());
-	private static final ResourceBundle messages = Main.getMessages();
-	static {
-		logger.setLevel(Level.ALL);
-	}
+	private static final Logger logger = i18n.getLogger(CopyManager.class);
 	
 	//Parameter für ShutdownHook
 	public static boolean CopyingFiles;
@@ -37,8 +32,8 @@ public class CopyManager {
 	public static final String time = LocalDateTime.now().toString().substring(0, 16).replaceAll(":", ".");
 
 	//Werden von ActionListenerCheckBox gesetzt
-	public static boolean calcCheckSumOldDir = true ;
-	public static boolean calcCheckSumOnFinish = true;
+	public static boolean checkFilesOldDir = true ;
+	public static boolean checkFilesOnFinish = true;
 	
 	/**
 	 * Wert nicht public, um ihn read-only von extern zu machen, um Fehler zu vermeiden
@@ -53,7 +48,6 @@ public class CopyManager {
 	 * a) Eine Datei fertig geschrieben wurde
 	 * b) Keine Datei geschrieben wird
 	 * c) Das Timeout erreicht wurde
-	 * TODO: Iterativ?
 	 * @param Timeout in Zentelsekunden
 	 */
 	public static void stopBackup(int Timeout) {
@@ -81,7 +75,7 @@ public class CopyManager {
 		CopyingFiles = true;
 		for (File file : Dateiliste) {
 			if(StopCopy) {
-				logger.finer(messages.getString("CopyCancelSuccess"));
+				logger.finer(i18n.translate("CopyCancelSuccess"));
 				CopyStopped = true;
 				try {
 					Thread.sleep(200);
@@ -91,7 +85,7 @@ public class CopyManager {
 			}
 			
 			if(file.isFile()) {
-				logger.fine(messages.getString("CopyingFile") + sourceDir + file.getName()+ "...");
+				logger.fine(i18n.translate("CopyingFile") + sourceDir + file.getName()+ "...");
 				String Save = file.getName();
 				File Source = new File(sourceDir + Save);
 				File Out = new File(outDir + Save);
@@ -99,7 +93,7 @@ public class CopyManager {
 					Files.copy(Source.toPath(), Out.toPath());
 				}
 				catch (IOException e) {
-					logger.severe(messages.getString("CopyErrorAbort"));
+					logger.severe(i18n.translate("CopyErrorAbort"));
 					e.printStackTrace();
 					System.exit(1);
 				}
@@ -119,26 +113,26 @@ public class CopyManager {
 	 * @param sourceDirFilesList
 	 * @param canUseGui
 	 */
-	private static void doWhenCopyDone(File outDir,Vector<File> sourceDirFilesList ,boolean canUseGui) {
+	private static void doWhenCopyDone(File outDir,List<File> sourceDirFilesList ,boolean canUseGui) {
 		GuiCreator.progress.setValue(3);
-		if(calcCheckSumOnFinish) {
+		if(checkFilesOnFinish) {
 			DirEqualChecker dirChecker = new DirEqualChecker();
-			logger.info(messages.getString("CheckSumCopiedFiles"));
-			Vector<File> outDirFilesList = dirChecker.listAllFiles(outDir);
+			logger.info(i18n.translate("ListCopiedFiles"));
+			List<File> outDirFilesList = dirChecker.listAllFiles(outDir);
 			if(dirChecker.checkFiles(outDirFilesList, sourceDirFilesList)) {
-				logger.info(messages.getString("CheckSumCopiedFilesSuccess"));
+				logger.info(i18n.translate("CopiedFilesEqual"));
 			}
 			else {
-				logger.severe(messages.getString("CheckSumCopiedFilesError"));
+				logger.severe(i18n.translate("CopiedFileNotEqual"));
 				if(canUseGui) {
-					JOptionPane.showMessageDialog(null, messages.getString("CheckSumCopiedFilesError"), "CheckSumError" ,JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, i18n.translate("CopiedFileNotEqual"), "FileError" ,JOptionPane.ERROR_MESSAGE);
 				}
 				System.exit(954);
 			}
 		}
-		logger.info(messages.getString("CopySuccess"));
+		logger.info(i18n.translate("CopySuccess"));
 		if(canUseGui) {
-			JOptionPane.showMessageDialog(null, messages.getString("CopySuccess"));
+			JOptionPane.showMessageDialog(null, i18n.translate("CopySuccess"));
 		}
 		System.exit(0);
 	}
@@ -157,7 +151,7 @@ public class CopyManager {
 		File[] savesList;
 		String outDirString;
 		int savesCount, saveDirFilesCount;
-		Vector<File> sourceDirFileList = null;
+		List<File> sourceDirFileList = null;
 		
 		outDirRaw = new File(OutDirRawString);
 		sourceDir = new File(SourceDirString);	
@@ -165,22 +159,22 @@ public class CopyManager {
 		outDir = new File(outDirString);
 		
 		if(!sourceDir.exists()||!sourceDir.isDirectory()) {
-			logger.warning(messages.getString("SourceDirNotFound"));
+			logger.warning(i18n.translate("SourceDirNotFound"));
 			if(canUseGui) {
-				JOptionPane.showMessageDialog(null, messages.getString("SourceDirNotFound"), messages.getString("SourceDirNotFoundTitle") , JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, i18n.translate("SourceDirNotFound"), i18n.translate("SourceDirNotFoundTitle") , JOptionPane.WARNING_MESSAGE);
 			}
 			System.exit(0);
 		}
-		logger.fine(messages.getString("SourceDir")+ sourceDir);
-		logger.fine(messages.getString("OutDir") + outDirRaw);
+		logger.fine(i18n.translate("SourceDir")+ sourceDir);
+		logger.fine(i18n.translate("OutDir") + outDirRaw);
 		
 		//Versuche, Save Verzeichnis zur Erstellen. Falls es schon vorhanden ist, geschieht nichts
 		outDirRaw.mkdir();
 		
 		if(outDir.exists()) {
-			logger.warning(messages.getString("SaveDoneThisMinute"));
+			logger.warning(i18n.translate("SaveDoneThisMinute"));
 			if(canUseGui) {
-				JOptionPane.showMessageDialog(null, messages.getString("SaveDoneThisMinute"));
+				JOptionPane.showMessageDialog(null, i18n.translate("SaveDoneThisMinute"));
 			}
 			System.exit(0);
 		}
@@ -190,28 +184,28 @@ public class CopyManager {
 		
 		DirEqualChecker dirChecker = new DirEqualChecker();
 		GuiCreator.progress.setValue(0);
-		if(calcCheckSumOldDir|| calcCheckSumOnFinish) {
-			logger.info(messages.getString("CheckSumSourceDir"));
+		if(checkFilesOldDir || checkFilesOnFinish) {
+			logger.info(i18n.translate("ListSourceDir"));
 			sourceDirFileList = dirChecker.listAllFiles(sourceDir);
-			logger.finer(sourceDirFileList.size() + messages.getString("FilesInSourceDir"));
+			logger.finer(sourceDirFileList.size() + i18n.translate("FilesInSourceDir"));
 			GuiCreator.progress.setValue(1);
 
-			if (savesCount >= 1 && calcCheckSumOldDir) {
+			if (savesCount >= 1 && checkFilesOldDir) {
 				// We don't need to check if there are not the same number of files
-				Vector<File> oldDirFilesList = dirChecker.listAllFiles(savesList[savesCount - 1]);
+				List<File> oldDirFilesList = dirChecker.listAllFiles(savesList[savesCount - 1]);
 				saveDirFilesCount = oldDirFilesList.size();
-				logger.finer(saveDirFilesCount + messages.getString("FilesInOutDir"));
+				logger.finer(saveDirFilesCount + i18n.translate("FilesInOutDir"));
 				if (oldDirFilesList.size() != sourceDirFileList.size()) {
-					logger.info(messages.getString("SkipCheckSum"));
+					logger.info(i18n.translate("SkipCheckDir"));
 				} else {
 
 					//Check all Files
-					logger.info(messages.getString("CheckSumOldDir"));
+					logger.info(i18n.translate("ListOldDir"));
 					if (dirChecker.checkFiles(sourceDirFileList, oldDirFilesList)) {
 						//We don't need to copy any files
-						logger.info(messages.getString("SkipCopy"));
+						logger.info(i18n.translate("SkipCopy"));
 						if (canUseGui) {
-							JOptionPane.showMessageDialog(null, messages.getString("SkipCopy"));
+							JOptionPane.showMessageDialog(null, i18n.translate("SkipCopy"));
 						}
 						System.exit(0);
 					}
@@ -220,8 +214,8 @@ public class CopyManager {
 		}
 		
 		outDir.mkdir();
-		logger.finer(messages.getString("CreatingDir") + outDir);
-		logger.info(messages.getString("CopyStarted"));
+		logger.finer(i18n.translate("CreatingDir") + outDir);
+		logger.info(i18n.translate("CopyStarted"));
 		GuiCreator.progress.setValue(2);
 		CopyMgr.executeCopyDir(SourceDirString, outDirString);
 		doWhenCopyDone(outDir, sourceDirFileList,canUseGui);

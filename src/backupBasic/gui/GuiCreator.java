@@ -2,30 +2,21 @@ package backupBasic.gui;
 /*(c)2016, Tobias Hotz
  * Further Information can be found in Info.txt
  */
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import backupBasic.util.ThreadedBackup;
+import backupBasic.util.i18n;
 
 import javax.swing.*;
-
-import backupBasic.backup.Main;
-import backupBasic.util.ThreadedBackup;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.logging.Logger;
 
 /**
  * @author Tobias Hotz
  */
 public class GuiCreator extends JFrame implements ActionListener {
-	private static final Logger logger = Logger.getLogger(GuiCreator.class.getName());
-	private static final ResourceBundle messages = Main.getMessages();
-	static {
-		logger.setLevel(Level.ALL);
-	}
+	private static final Logger logger = i18n.getLogger(GuiCreator.class);
 	
 	private static final long serialVersionUID = -622181498516220508L;
 	
@@ -58,36 +49,36 @@ public class GuiCreator extends JFrame implements ActionListener {
     	ProgressContent = new JPanel();
 		Ok = new JButton("OK");
 		Ok.setActionCommand("Ok");
-		Ok.setToolTipText(messages.getString("OKToolTip"));
+		Ok.setToolTipText(i18n.translate("OKToolTip"));
         
 		Cancel = new JButton("Cancel");
 		Cancel.setActionCommand("Cancel");
-		Cancel.setToolTipText(messages.getString("CancelToolTip"));
+		Cancel.setToolTipText(i18n.translate("CancelToolTip"));
 		
 		CancelP = new JButton("Cancel");
 		CancelP.setActionCommand("Cancel");
-		CancelP.setToolTipText(messages.getString("CancelToolTip"));
+		CancelP.setToolTipText(i18n.translate("CancelToolTip"));
 		
-		Source = new JButton(messages.getString("ChangeSource"));
+		Source = new JButton(i18n.translate("ChangeSource"));
 		Source.setActionCommand("Source");
 		
-		Dest = new JButton(messages.getString("ChangeDest"));
+		Dest = new JButton(i18n.translate("ChangeDest"));
 		Dest.setActionCommand("Dest");
 
-		SourceTitle = new JLabel("  " + messages.getString("SourcePath") + "  ");
-		DestTitle = new JLabel("  "+ messages.getString("DestPath") + "  ");
+		SourceTitle = new JLabel("  " + i18n.translate("SourcePath") + "  ");
+		DestTitle = new JLabel("  "+ i18n.translate("DestPath") + "  ");
 		SourcePath = new JLabel("  " + SourceDir + "  ");
 		DestPath = new JLabel("  " + OutDir + "  ");
 		
-		CheckSumOnFinish = new JCheckBox(messages.getString("CheckSumFinishedButton"));
-		CheckSumOnFinish.setToolTipText(messages.getString("CheckSumFinishedToolTip"));
+		CheckSumOnFinish = new JCheckBox(i18n.translate("CheckSumFinishedButton"));
+		CheckSumOnFinish.setToolTipText(i18n.translate("CheckSumFinishedToolTip"));
 		CheckSumOnFinish.setSelected(true);
 		CheckSumOnFinish.setActionCommand("CheckSumOnFinish");
 		
-		CheckSumOldDir = new JCheckBox(messages.getString("CheckSumOldDirButton"));
-		CheckSumOldDir.setToolTipText(messages.getString("CheckSumOldDirToolTip"));
+		CheckSumOldDir = new JCheckBox(i18n.translate("CheckSumOldDirButton"));
+		CheckSumOldDir.setToolTipText(i18n.translate("CheckSumOldDirToolTip"));
 		CheckSumOldDir.setSelected(true);
-		CheckSumOldDir.setActionCommand("CheckSumOldDir");
+		CheckSumOldDir.setActionCommand("ListOldDir");
 		
 		//TODO Replace w/ ProgressBar
 		progress = new JProgressBar();
@@ -137,8 +128,8 @@ public class GuiCreator extends JFrame implements ActionListener {
     
     /**
      * Erstellet eine GUI zum Auswählen von Quell- und Zielverzeichnis
-     * @param OutDir
-     * @param SourceDir
+     * @param DefaultOutDir
+     * @param DefaultSourceDir
      */
 	public static void createGui(String DefaultOutDir, String DefaultSourceDir) {
 		OutDir = DefaultOutDir;
@@ -148,7 +139,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 		GuiCreator MyFrame = new GuiCreator();
 		MyFrame.setResizable(false);
 		MyFrame.setTitle("BackupBasic");
-		MyFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		MyFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		MyFrame.pack();
 		//Mittig Positionieren
 		MyFrame.setLocation(dim.width/2-MyFrame.getSize().width/2, dim.height/2-MyFrame.getSize().height/2);
@@ -184,12 +175,12 @@ public class GuiCreator extends JFrame implements ActionListener {
 		Window window = SwingUtilities.windowForComponent(Cancel);
 		switch(Event) {
 		case "Source":
-			SourceDir = chooseDir(messages.getString("ChooseSourceDir"), SourcePath , SourceDir);
+			SourceDir = chooseDir(i18n.translate("ChooseSourceDir"), SourcePath , SourceDir);
 			window.pack();
 			window.setLocation(dim.width/2-window.getSize().width/2, dim.height/2-window.getSize().height/2);
 			break;
 		case "Dest":
-			OutDir = chooseDir(messages.getString("ChooseOutDir"), DestPath , OutDir);
+			OutDir = chooseDir(i18n.translate("ChooseOutDir"), DestPath , OutDir);
 			window.pack();
 			window.setLocation(dim.width/2-window.getSize().width/2, dim.height/2-window.getSize().height/2);
 			break;
@@ -206,10 +197,10 @@ public class GuiCreator extends JFrame implements ActionListener {
 			break;
 		case "Cancel":
             if (!BackupInProgress) {
-                logger.info(messages.getString("UserExit"));
+                logger.info(i18n.translate("UserExit"));
                 System.exit(0);
             } else {
-                if(JOptionPane.showConfirmDialog(null, messages.getString("WarinigOnClose")) == 0)
+                if(JOptionPane.showConfirmDialog(null, i18n.translate("WarinigOnClose")) == 0)
                     System.exit(0);
             }
             break;

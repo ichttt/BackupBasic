@@ -2,10 +2,11 @@ package backupBasic.gui;
 /*(c)2016, Tobias Hotz
  * Further Information can be found in Info.txt
  */
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import backupBasic.backup.CopyManager;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * @author Tobias Hotz
@@ -16,10 +17,10 @@ public class ActionListenerCheckBox implements ActionListener {
 		String Event = ActionEvent.getActionCommand();
 		switch(Event) {
 		case "CheckSumOnFinish":
-			CopyManager.calcCheckSumOnFinish = !CopyManager.calcCheckSumOnFinish;
+			CopyManager.checkFilesOnFinish = !CopyManager.checkFilesOnFinish;
 			break;
-		case "CheckSumOldDir":
-			CopyManager.calcCheckSumOldDir = !CopyManager.calcCheckSumOldDir;
+		case "ListOldDir":
+			CopyManager.checkFilesOldDir = !CopyManager.checkFilesOldDir;
 			break;
 		}
 	}

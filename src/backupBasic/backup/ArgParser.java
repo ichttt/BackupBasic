@@ -3,12 +3,13 @@ package backupBasic.backup;
  * Further Information can be found in Info.txt
  */
 
-import java.awt.GraphicsEnvironment;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import backupBasic.gui.GuiCreator;
+import backupBasic.util.i18n;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+
+import java.awt.*;
+import java.util.logging.Logger;
 
 /**
  * @author Tobias Hotz
@@ -16,16 +17,12 @@ import backupBasic.gui.GuiCreator;
 public class ArgParser {	
 	
 	//TODO Jopt-simple implementieren
-	private static final Logger logger = Logger.getLogger(ArgParser.class.getName());
-	private static final ResourceBundle messages = Main.getMessages();
-	static {
-		logger.setLevel(Level.ALL);
-	}
+	private static final Logger logger = i18n.getLogger(ArgParser.class);
 	
 	/**
 	 * Fügt, falls nötig, ein Slash an das Ende eines Strings
 	 */
-	public static String setLastCharSlash(String check) {
+	public static String setLastCharSlash(@NotNull String check) {
 		if(!check.endsWith("/") && !check.endsWith("\\")) {
 			check = check + "/";
 		}
@@ -36,39 +33,48 @@ public class ArgParser {
 	 * Verwaltet Kommandozeilenargumente und gibt an GUICreator oder CopyManager ab
 	 * @param args Argumente zum Parsen
 	 */
-	public static void parseArgs(String[] args) {
+	public static void parseArgs(@Nullable String[] args) {
 		final boolean CanUseGui = !GraphicsEnvironment.isHeadless();
 		//Standardpfade für Anno
 		String SourceDir = System.getProperty("user.home") + "\\AppData\\Roaming\\.minecraft\\saves\\";
 		String OutDirRaw = System.getProperty("user.home") + "\\Desktop\\BackupMinecraft\\";
-		
+
+		if(args==null) {
+            if (CanUseGui) {
+                GuiCreator.createGui(OutDirRaw, SourceDir);
+            } else {
+                logger.severe(i18n.translate("NotEnoughArgs"));
+                logger.severe(i18n.translate("Usage"));
+            }
+            return;
+        }
 		//Argumente verwalten und Unterfunktionen aufrufen
 		switch(args.length) {		
 		
 		//Quellverzeichnis, Zielverzeichnis, ChecksumOldDir, ChecksumFinished
 		case 4:
 			if(args[3].equals("false")) {
-				CopyManager.calcCheckSumOnFinish = false;
+				CopyManager.checkFilesOnFinish = false;
 			}
 			else if(args[3].equals("true")) {
 				//Eigentlich nicht nötig
-				CopyManager.calcCheckSumOnFinish = true;
+				CopyManager.checkFilesOnFinish = true;
 			}
 			else {
-				logger.severe(messages.getString("Usage"));
+				logger.severe(i18n.translate("Usage"));
 				System.exit(0);
 			}
 		//Quellverzeichnis, Zielverzeichnis, ChecksumOldDir
 		case 3:
 			if(args[2].equals("false")) {
-				CopyManager.calcCheckSumOldDir = false;
+				CopyManager.checkFilesOldDir = false;
 			}
 			else if(args[2].equals("true")) {
 				//Eigentlich nicht nötig
-				CopyManager.calcCheckSumOnFinish = true;
+				CopyManager.checkFilesOnFinish = true;
 			}
 			else {
-				logger.severe(messages.getString("Usage"));
+				logger.severe(i18n.translate("Usage"));
 				System.exit(0);
 			}
 		//Quellverzeichnis, Zielverzeichnis
@@ -77,7 +83,7 @@ public class ArgParser {
 				SourceDir = setLastCharSlash(args[1]);
 			}
 			else {
-				logger.fine(messages.getString("DefaultOut"));
+				logger.fine(i18n.translate("DefaultOut"));
 			}
 		case 1:
 			//Quellverzeichnis
@@ -85,7 +91,7 @@ public class ArgParser {
 				SourceDir = setLastCharSlash(args[0]);
 			}
 			else {
-				logger.fine(messages.getString("DefaultSource"));
+				logger.fine(i18n.translate("DefaultSource"));
 			}
 			CopyManager.copyDir(OutDirRaw, SourceDir);
 			break;
@@ -95,14 +101,14 @@ public class ArgParser {
 				GuiCreator.createGui(OutDirRaw, SourceDir);
 			}
 			else {
-				logger.severe(messages.getString("NotEnoughArgs"));
-				logger.severe(messages.getString("Usage"));
+				logger.severe(i18n.translate("NotEnoughArgs"));
+				logger.severe(i18n.translate("Usage"));
 			}
 			break;
 			
 		//Zu viele Parameter
 		default:
-			logger.severe(messages.getString("Usage"));
+			logger.severe(i18n.translate("Usage"));
 			break;
 		}
 		
