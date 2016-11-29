@@ -4,6 +4,7 @@ package backupBasic.backup;
  */
 
 import backupBasic.util.i18n;
+import com.sun.istack.internal.NotNull;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -28,7 +29,7 @@ public class DirEqualChecker
 	 * @param dirToCollect
 	 * @return fileStreamsLenght
 	 */
-	public List<File> listAllFiles(File dirToCollect) {
+	public List<File> listAllFiles(@NotNull File dirToCollect) {
 	    assert (dirToCollect.isDirectory());
 	    List<File> fileVector = new Vector<File>();
 		logger.finest(i18n.translate("ListFiles"));
@@ -40,7 +41,7 @@ public class DirEqualChecker
 	 * Checks if a dir is equal to another
 	 * @return true if the entire dir is equal
 	 */
-	public boolean checkFiles(List<File> dirVec, List<File> dir2Vec) {
+	public boolean checkFiles(@NotNull List<File> dirVec, @NotNull List<File> dir2Vec) {
 		for(int i = 0;i<dirVec.size();i++) {
 			File dir = dirVec.get(i);
 			File dir2 = dir2Vec.get(i);
@@ -54,8 +55,7 @@ public class DirEqualChecker
 		return false;
 	}
 
-	private void collectInputStreams(File dir,
-	                                 List<File> foundFiles) {
+	private void collectInputStreams(@NotNull File dir, @NotNull List<File> foundFiles) {
 
 	    File[] fileList = dir.listFiles();
 	    Arrays.sort(fileList,               // Need in reproducible order

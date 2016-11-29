@@ -2,6 +2,7 @@ package backupBasic.util;
 
 import backupBasic.backup.CopyManager;
 import backupBasic.gui.GuiCreator;
+import com.sun.istack.internal.NotNull;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class ThreadedBackup implements Runnable {
 	 * @param stringToWrite
 	 * @param filename
 	 */
-	private static void writeExitStatus(String stringToWrite, String filename) {
+	private static void writeExitStatus(@NotNull String stringToWrite, @NotNull String filename) {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(GuiCreator.OutDir + "/" + CopyManager.time + "/" + filename);

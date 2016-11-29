@@ -5,6 +5,7 @@ package backupBasic.backup;
 
 import backupBasic.gui.GuiCreator;
 import backupBasic.util.i18n;
+import com.sun.istack.internal.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.Vector;
 import java.util.List;
 import java.util.logging.Logger;
 /**
@@ -50,7 +50,7 @@ public class CopyManager {
 	 * c) Das Timeout erreicht wurde
 	 * @param Timeout in Zentelsekunden
 	 */
-	public static void stopBackup(int Timeout) {
+	public static void stopBackup(@NotNull int Timeout) {
 		StopCopy = true;
 		Wait++;
 		try {
@@ -70,7 +70,7 @@ public class CopyManager {
 	 * @param sourceDir
 	 * @param outDir
 	 */
-	private void executeCopyDir(String sourceDir, String outDir) {
+	private void executeCopyDir(@NotNull String sourceDir, @NotNull String outDir) {
 		File[] Dateiliste = new File(sourceDir).listFiles();
 		CopyingFiles = true;
 		for (File file : Dateiliste) {
@@ -113,7 +113,7 @@ public class CopyManager {
 	 * @param sourceDirFilesList
 	 * @param canUseGui
 	 */
-	private static void doWhenCopyDone(File outDir,List<File> sourceDirFilesList ,boolean canUseGui) {
+	private static void doWhenCopyDone(@NotNull File outDir, @NotNull List<File> sourceDirFilesList, @NotNull boolean canUseGui) {
 		GuiCreator.progress.setValue(3);
 		if(checkFilesOnFinish) {
 			DirEqualChecker dirChecker = new DirEqualChecker();
@@ -142,7 +142,7 @@ public class CopyManager {
 	/**
 	 * Prüft, ob die Datein mit einem voherigen Backup übereinstimmen und kopiert ggf. das gesamte Verzeichnis samt Unterverzeichnis
 	 */
-	public static void copyDir(String OutDirRawString, String SourceDirString) {	
+	public static void copyDir(@NotNull String OutDirRawString, @NotNull String SourceDirString) {
 		
 		CopyManager CopyMgr = new CopyManager();
 		

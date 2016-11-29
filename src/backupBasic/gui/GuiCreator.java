@@ -5,6 +5,8 @@ package backupBasic.gui;
 
 import backupBasic.util.ThreadedBackup;
 import backupBasic.util.i18n;
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,9 +155,10 @@ public class GuiCreator extends JFrame implements ActionListener {
 	 * @param Dir
 	 * @return Dir
 	 */
-	private String chooseDir(String Title, JLabel label, String Dir) {
+	private String chooseDir(@Nullable String Title, @NotNull JLabel label, @NotNull String Dir) {
 		JFileChooser DirChooser = new JFileChooser();
-		DirChooser.setDialogTitle(Title);
+		if(label !=null)
+			DirChooser.setDialogTitle(Title);
 		DirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		//TODO Change to last dir?
 		if(DirChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
