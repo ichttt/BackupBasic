@@ -5,7 +5,6 @@ package backupBasic.gui;
 
 import backupBasic.util.ThreadedBackup;
 import backupBasic.util.i18n;
-import com.sun.istack.internal.NotNull;
 import com.sun.istack.internal.Nullable;
 
 import javax.swing.*;
@@ -139,7 +138,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 	        OutDir = "";
 	    if(DefaultOutDir==null)
 	        SourceDir = "";
-		logger.fine("Lade GUI");
+		logger.fine(i18n.translate("LoadGui"));
 		
 		GuiCreator MyFrame = new GuiCreator();
 		MyFrame.setResizable(false);
@@ -152,21 +151,21 @@ public class GuiCreator extends JFrame implements ActionListener {
 	}
 	
 	/**
-	 * Öffnet einen Dialog, um einen Ordner auszuwählen und gibt den neuen Pfad zurück
-	 * @param Title
-	 * @param label
-	 * @param Dir
-	 * @return Dir
+	 * Shows a JFileChooser and returns the new directory
+	 * @param Title The name that will be displayed
+	 * @param label The JLabel to set the Text
+	 * @param Dir The directory that the search will start in
+	 * @return The directory that was choosen and if none was choosen the last one
 	 */
-	private String chooseDir(@Nullable String Title, @NotNull JLabel label, @NotNull String Dir) {
-		JFileChooser DirChooser = new JFileChooser();
+	private String chooseDir(@Nullable String Title, @Nullable JLabel label, @Nullable String Dir) {
+		JFileChooser DirChooser = new JFileChooser(Dir);
 		if(label !=null)
 			DirChooser.setDialogTitle(Title);
 		DirChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		//TODO Change to last dir?
 		if(DirChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			Dir = DirChooser.getSelectedFile().toString() + "/";
-			label.setText(Dir);
+			if(label!=null)
+			    label.setText(Dir);
 		}
 		return Dir;
 	}	
