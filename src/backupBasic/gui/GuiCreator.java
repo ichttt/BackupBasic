@@ -33,7 +33,7 @@ public class GuiCreator extends JFrame implements ActionListener {
 	private JButton Ok, Cancel, Source, Dest, CancelP;
 	private JLabel SourceTitle, DestTitle, SourcePath, DestPath;
 	private JLabel ProgressText;
-	private JCheckBox CheckSumOnFinish, CheckSumOldDir;
+	private JCheckBox CheckOnFinish, CheckOldDir;
 	public static JProgressBar progress;
 	
     public GuiCreator() {
@@ -72,17 +72,16 @@ public class GuiCreator extends JFrame implements ActionListener {
 		SourcePath = new JLabel("  " + SourceDir + "  ");
 		DestPath = new JLabel("  " + OutDir + "  ");
 		
-		CheckSumOnFinish = new JCheckBox(i18n.translate("CheckSumFinishedButton"));
-		CheckSumOnFinish.setToolTipText(i18n.translate("CheckSumFinishedToolTip"));
-		CheckSumOnFinish.setSelected(true);
-		CheckSumOnFinish.setActionCommand("CheckSumOnFinish");
+		CheckOnFinish = new JCheckBox(i18n.translate("CheckDirCopyButton"));
+		CheckOnFinish.setToolTipText(i18n.translate("CheckDirCopy"));
+		CheckOnFinish.setSelected(true);
+		CheckOnFinish.setActionCommand("ListCopiedDir");
 		
-		CheckSumOldDir = new JCheckBox(i18n.translate("CheckSumOldDirButton"));
-		CheckSumOldDir.setToolTipText(i18n.translate("CheckSumOldDirToolTip"));
-		CheckSumOldDir.setSelected(true);
-		CheckSumOldDir.setActionCommand("ListOldDir");
-		
-		//TODO Replace w/ ProgressBar
+		CheckOldDir = new JCheckBox(i18n.translate("CheckOldDirButton"));
+		CheckOldDir.setToolTipText(i18n.translate("CheckOldDirToolTip"));
+		CheckOldDir.setSelected(true);
+		CheckOldDir.setActionCommand("ListOldDir");
+
 		progress = new JProgressBar();
 		progress.setMinimum(0);
 		progress.setMaximum(4);
@@ -92,8 +91,8 @@ public class GuiCreator extends JFrame implements ActionListener {
 		DestTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		SourcePath.setHorizontalAlignment(SwingConstants.CENTER);
 		DestPath.setHorizontalAlignment(SwingConstants.CENTER);
-		CheckSumOnFinish.setHorizontalAlignment(SwingConstants.CENTER);
-		CheckSumOldDir.setHorizontalAlignment(SwingConstants.CENTER);
+		CheckOnFinish.setHorizontalAlignment(SwingConstants.CENTER);
+		CheckOldDir.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		Ok.addActionListener(this);
 		Cancel.addActionListener(this);
@@ -101,8 +100,8 @@ public class GuiCreator extends JFrame implements ActionListener {
 		Source.addActionListener(this);
 		Dest.addActionListener(this);
 		//Checkboxen erhalten eigene Klasse zwecks Übersicht
-		CheckSumOnFinish.addActionListener(checkBoxListener);
-		CheckSumOldDir.addActionListener(checkBoxListener);
+		CheckOnFinish.addActionListener(checkBoxListener);
+		CheckOldDir.addActionListener(checkBoxListener);
         }
     
     /**
@@ -118,8 +117,8 @@ public class GuiCreator extends JFrame implements ActionListener {
 		MainContent.add(Dest);
 		MainContent.add(Ok);
 		MainContent.add(Cancel);
-		MainContent.add(CheckSumOnFinish);
-		MainContent.add(CheckSumOldDir);
+		MainContent.add(CheckOnFinish);
+		MainContent.add(CheckOldDir);
 		ProgressContent.add(ProgressText);
 		ProgressContent.add(progress);
 		ProgressContent.add(CancelP);

@@ -16,7 +16,7 @@ public class ActionListenerCheckBox implements ActionListener {
 	public void actionPerformed(ActionEvent ActionEvent) {
 		String Event = ActionEvent.getActionCommand();
 		switch(Event) {
-		case "CheckSumOnFinish":
+		case "ListCopiedDir":
 			CopyManager.checkFilesOnFinish = !CopyManager.checkFilesOnFinish;
 			break;
 		case "ListOldDir":
