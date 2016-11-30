@@ -32,12 +32,12 @@ public class Main implements Thread.UncaughtExceptionHandler {
             if(!GraphicsEnvironment.isHeadless())
                 JOptionPane.showMessageDialog(null, i18n.translate("UncaughtException") +
                         "\n" + i18n.translate("Error") + ": " + e + "\n" + i18n.translate("Details"), "ERROR", JOptionPane.ERROR_MESSAGE);
-            } catch(Exception e2) {
-	            e.printStackTrace();
-	            System.err.println("Errors while printing Error:");
-	            e2.printStackTrace();
-	            if(!GraphicsEnvironment.isHeadless())
-	            JOptionPane.showMessageDialog(null, "An fatal error occurred, and the program crashed." +
+        } catch(Exception e2) {
+            e.printStackTrace();
+            System.err.println("Errors while printing Error:");
+            e2.printStackTrace();
+            if(!GraphicsEnvironment.isHeadless())
+                JOptionPane.showMessageDialog(null, "An fatal error occurred, and the program crashed." +
                         "\nIn addition to that, it failed to translate this Message", "ERROR", JOptionPane.ERROR_MESSAGE);
             }
 		System.exit(-1);

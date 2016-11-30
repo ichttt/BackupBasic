@@ -39,9 +39,10 @@ public class i18n {
     public static void initLogging() {
         logger.setLevel(Level.ALL);
         Locale currentLocale;
-        String userLanguage, userCountry;
+        String userLanguage, userCountry, userdir;
         Handler fileHandler;
 
+        userdir = System.getProperty("user.home");
         userCountry = System.getProperty("user.country");
         userLanguage = System.getProperty("user.language");
 
@@ -57,13 +58,13 @@ public class i18n {
         try {
             if(System.getProperty("os.name").startsWith("Windows")) {
                 //Ordner erstellen
-                new File(System.getProperty("user.home") + "/AppData/Local/BackupBasic").mkdirs();
-                fileHandler = new FileHandler(System.getProperty("user.home") + "/AppData/Local/BackupBasic/LogBackupBasic.xml");
+                new File(userdir + "/AppData/Local/BackupBasic").mkdirs();
+                fileHandler = new FileHandler(userdir + "/AppData/Local/BackupBasic/LogBackupBasic.xml");
             }
             else {
                 //Ordner erstellen
-                new File(System.getProperty("user.home") + "BackupBasic").mkdirs();
-                fileHandler = new FileHandler(System.getProperty("user.home")+ "/BackupBasic/LogBackupBasic.xml");
+                new File(userdir + "BackupBasic").mkdirs();
+                fileHandler = new FileHandler(userdir+ "/BackupBasic/LogBackupBasic.xml");
             }
             //Fügt FileHandler global hinzu
             logger.getParent().addHandler(fileHandler);
