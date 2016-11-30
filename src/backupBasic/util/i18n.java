@@ -48,11 +48,11 @@ public class i18n {
 
         currentLocale = new Locale(userLanguage, userCountry);
         try {
-            messages = ResourceBundle.getBundle("backupBasic\\BackupBasic", currentLocale);
+            messages = ResourceBundle.getBundle("BackupBasic", currentLocale);
         }
         catch(MissingResourceException e) {
             System.out.println("Fallback: English");
-            messages = ResourceBundle.getBundle("backupBasic\\BackupBasic", new Locale("en", "US"));
+            messages = ResourceBundle.getBundle("BackupBasic", new Locale("en", "US"));
         }
 
         try {
