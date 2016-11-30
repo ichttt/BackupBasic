@@ -1,8 +1,11 @@
 (c)2016, Tobias Hotz
 
-BackupBasic, Version 1.0
+BackupBasic, Version 1.1
 
 Changelog:
+
+1.1:Effizienz bei Dateiabgleich deutlich Verbessert, Fehler behoben.
+
 1.0: Erstveröffenlichung auf Github
 	
 Dieses Programm ist primär für das Backup von Savegames gedacht.
