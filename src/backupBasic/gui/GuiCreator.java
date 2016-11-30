@@ -129,12 +129,16 @@ public class GuiCreator extends JFrame implements ActionListener {
     
     /**
      * Erstellet eine GUI zum Auswählen von Quell- und Zielverzeichnis
-     * @param DefaultOutDir
-     * @param DefaultSourceDir
+     * @param DefaultOutDir Directory that will be choosen when the user does not specify another dir
+     * @param DefaultSourceDir Directory that will be choosen when the user does not specify another dir
      */
-	public static void createGui(String DefaultOutDir, String DefaultSourceDir) {
-		OutDir = DefaultOutDir;
-		SourceDir = (DefaultSourceDir);
+	public static void createGui(@Nullable String DefaultOutDir, @Nullable String DefaultSourceDir) {
+        OutDir = DefaultOutDir;
+        SourceDir = (DefaultSourceDir);
+	    if(DefaultOutDir==null)
+	        OutDir = "";
+	    if(DefaultOutDir==null)
+	        SourceDir = "";
 		logger.fine("Lade GUI");
 		
 		GuiCreator MyFrame = new GuiCreator();
