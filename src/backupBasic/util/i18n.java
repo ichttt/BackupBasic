@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  */
 public class i18n {
     private static final Logger logger = Logger.getLogger(Main.class.getName());
-    private static ResourceBundle messages;
+    private static ResourceBundle messages, fallback;
 
     public static Logger getLogger(@NotNull Class c) {
         Logger log = Logger.getLogger(c.getName());
@@ -30,7 +30,12 @@ public class i18n {
     }
 
     public static String translate(@NotNull String string) {
-        return messages.getString(string);
+        try {
+            return messages.getString(string);
+        }
+        catch (MissingResourceException e) {
+            return fallback.getString(string);
+        }
     }
 
     /**
@@ -47,12 +52,14 @@ public class i18n {
         userLanguage = System.getProperty("user.language");
 
         currentLocale = new Locale(userLanguage, userCountry);
+        //If this isn't found, we can't continue as no fallback is defined
+        fallback = ResourceBundle.getBundle("BackupBasic", new Locale("en", "US"));
         try {
             messages = ResourceBundle.getBundle("BackupBasic", currentLocale);
         }
         catch(MissingResourceException e) {
             System.out.println("Fallback: English");
-            messages = ResourceBundle.getBundle("BackupBasic", new Locale("en", "US"));
+            messages = fallback;
         }
 
         try {
